@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <style>
+    :root {
+      --bg-color: #f4f6f8;
+      --container-bg: #fff;
+      --text-color: #333;
+      --input-bg: #fff;
+      --input-border: #ccc;
+      --button-bg: #007bff;
+      --button-hover: #0056b3;
+      --answer-bg: #f8f9fa;
+      --shadow-color: rgba(0,0,0,0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --container-bg: #1e1e1e;
+      --text-color: #e0e0e0;
+      --input-bg: #2d2d2d;
+      --input-border: #444;
+      --button-bg: #0d6efd;
+      --button-hover: #0b5ed7;
+      --answer-bg: #0c0000;
+      --shadow-color: rgba(0,0,0,0.3);
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      background: var(--container-bg);
+      padding: 25px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 4px 8px var(--shadow-color);
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-color);
+      width: auto;
+      padding: 5px;
+    }
+
+    input, button:not(.theme-toggle) {
+      margin: 10px 0;
+      padding: 12px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--input-border);
+      box-sizing: border-box;
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
+
+    button:not(.theme-toggle) {
+      background: var(--button-bg);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover:not(.theme-toggle) {
+      background: var(--button-hover);
+    }
+
+    .answer {
+      margin-top: 25px;
+      text-align: left;
+      background: var(--answer-bg);
+      padding: 15px;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+        width: 95%;
+      }
+      
+      .theme-toggle {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-bottom: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+      
+      .container {
+        padding: 15px;
+      }
+      
+      input, button:not(.theme-toggle) {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button class="theme-toggle" id="themeToggle">🌙</button>
+    <h1>EDITH</h1>
+    <p>Your AI Document Analyzer</p>
+    
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="files" multiple>
+      <input type="text" name="query" placeholder="Ask a question...">
+      <button type="submit">Ask</button>
+    </form>
+
+    {% if answer %}
+    <div class="answer">
+      <h2>💡 Answer:</h2>
+      <p>{{ answer | safe }}</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    // Check for saved theme preference or use OS preference
+    const currentTheme = localStorage.getItem('theme') || 
+                        (prefersDarkScheme.matches ? 'dark' : 'light');
+    
+    // Apply the theme
+    if (currentTheme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️';
+    }
+    
+    // Toggle theme on button click
+    themeToggle.addEventListener('click', function() {
+      let theme = 'light';
+      if (document.documentElement.getAttribute('data-theme') !== 'dark') {
+        theme = 'dark';
+        themeToggle.textContent = '☀️';
+      } else {
+        themeToggle.textContent = '🌙';
+      }
+      
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+    });
+  </script>
+</body>
+</html>
