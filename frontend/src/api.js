@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "http://localhost:8000/api"
+  baseURL: "https://edith-1-zsp2.onrender.com/api"
 });

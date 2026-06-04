@@ -11,7 +11,7 @@ from langchain.document_loaders import PyPDFLoader
 from .services.rag import (
     create_session,
     process_query,
-    embedding_model
+    get_embedding_model
 )
 
 
@@ -60,7 +60,7 @@ def ask_document(request):
             # Build FAISS index
             vectorstore = FAISS.from_documents(
                 docs,
-                embedding_model
+                get_embedding_model
             )
 
             # Generate unique session
