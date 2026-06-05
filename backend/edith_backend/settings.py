@@ -14,6 +14,7 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
     ".onrender.com",
+    "edith-1-zsp2.onrender.com",
     "localhost",
     "127.0.0.1",
 ]
@@ -26,7 +27,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    CORS_ALLOW_ALL_ORIGINS = True
+    
     # Third-party apps
     "rest_framework",
     "corsheaders",
@@ -46,7 +47,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    CORS_ALLOW_ALL_ORIGINS = True
 ]
 
 ROOT_URLCONF = "edith_backend.urls"

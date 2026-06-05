@@ -9,7 +9,8 @@ from rest_framework.response import Response
 
 from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import PyPDFLoader
+from PyPDF2 import PdfReader
+from langchain_core.documents import Document
 
 from .services.rag import (
     create_session,
@@ -45,16 +46,24 @@ def ask_document(request):
         try:
 
             # Load PDF
-            loader = PyPDFLoader(temp_path)
-            pages = loader.load()
+            reader = PdfReader(temp_path)
 
-            # Split into chunks
+            text = ""
+
+            for page in reader.pages:
+                page_text = page.extract_text()
+
+                if page_text:
+                    text += page_text + "\n"
+
+            docs = [Document(page_content=text)]
+
             splitter = RecursiveCharacterTextSplitter(
-                chunk_size=500,
-                chunk_overlap=50
+                chunk_size=300,
+                chunk_overlap=30
             )
 
-            docs = splitter.split_documents(pages)
+            docs = splitter.split_documents(docs)
 
             # Create embeddings using Google API
             embeddings = get_embedding_model()
