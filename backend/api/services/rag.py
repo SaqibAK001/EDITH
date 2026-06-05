@@ -14,9 +14,10 @@ genai.configure(
     api_key=os.getenv("GOOGLE_API_KEY")
 )
 
-model = genai.GenerativeModel(
-    "models/gemini-2.5-flash"
-)
+def get_model():
+    return genai.GenerativeModel(
+        "models/gemini-2.5-flash"
+    )
 
 def get_embedding_model():
     return GoogleGenerativeAIEmbeddings(
@@ -95,7 +96,7 @@ def process_query(session_id, query):
     vectorstore = session["vectorstore"]
 
     retriever = vectorstore.as_retriever(
-        search_kwargs={"k": 5}
+        search_kwargs={"k": 3}
     )
 
     results = retriever.get_relevant_documents(
@@ -128,7 +129,7 @@ You are an intelligent document assistant.
 
     try:
 
-        response = model.generate_content(
+        response = get_model.generate_content(
             final_prompt
         )
 

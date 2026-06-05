@@ -48,8 +48,8 @@ def ask_document(request):
 
             # Split into chunks
             splitter = RecursiveCharacterTextSplitter(
-                chunk_size=1000,
-                chunk_overlap=200
+                chunk_size=500,
+                chunk_overlap=50
             )
 
             docs = splitter.split_documents(pages)
