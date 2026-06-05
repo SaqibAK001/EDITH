@@ -6,6 +6,7 @@ gunicorn
 whitenoise
 python-dotenv
 
+langchain
 google-generativeai
 langchain-community
 langchain-google-genai
@@ -18,4 +19,4 @@ PyPDF2
 pdf2image
 pytesseract
 python-docx
-Pillow
+Pillows
