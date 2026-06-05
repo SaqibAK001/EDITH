@@ -11,6 +11,7 @@ langchain-community
 langchain-google-genai
 
 faiss-cpu
+numpy
 
 pypdf
 PyPDF2
