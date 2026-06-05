@@ -1,3 +1,5 @@
+print("VIEWS LOADED SUCCESSFULLY")
+
 import uuid
 import tempfile
 import os

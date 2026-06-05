@@ -1,8 +1,17 @@
+print("RAG FILE LOADED")
+
 import os
 import time
 from dotenv import load_dotenv
 import google.generativeai as genai
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+
+def get_embedding_model():
+    from langchain_google_genai import GoogleGenerativeAIEmbeddings
+
+    return GoogleGenerativeAIEmbeddings(
+        model="models/embedding-001",
+        google_api_key=os.getenv("GOOGLE_API_KEY")
+    )
 
 # =========================
 # CONFIG
@@ -10,11 +19,11 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 load_dotenv()
 
-genai.configure(
-    api_key=os.getenv("GOOGLE_API_KEY")
-)
-
 def get_model():
+    genai.configure(
+        api_key=os.getenv("GOOGLE_API_KEY")
+    )
+
     return genai.GenerativeModel(
         "models/gemini-2.5-flash"
     )
@@ -129,11 +138,13 @@ You are an intelligent document assistant.
 
     try:
 
-        response = get_model.generate_content(
+        model = get_model()
+
+        response = model.generate_content(
             final_prompt
         )
-
         return response.text
+        
 
     except Exception as e:
 
