@@ -2,8 +2,13 @@ import os
 import time
 from dotenv import load_dotenv
 import google.generativeai as genai
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
-from langchain.embeddings import HuggingFaceEmbeddings
+def get_embedding_model():
+    return GoogleGenerativeAIEmbeddings(
+        model="models/embedding-001",
+        google_api_key=os.getenv("GOOGLE_API_KEY")
+    )
 
 # =========================
 # CONFIG
@@ -12,24 +17,12 @@ from langchain.embeddings import HuggingFaceEmbeddings
 load_dotenv()
 
 genai.configure(
-    api_key=os.getenv("GEMINI_API_KEY")
+    api_key=os.getenv("GOOGLE_API_KEY")
 )
 
 model = genai.GenerativeModel(
     "models/gemini-2.5-flash"
 )
-
-_embedding_model = None
-
-def get_embedding_model():
-    global _embedding_model
-
-    if _embedding_model is None:
-        _embedding_model = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2"
-        )
-
-    return _embedding_model
 
 # =========================
 # SESSION STORAGE
