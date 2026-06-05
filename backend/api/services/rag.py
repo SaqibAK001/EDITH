@@ -3,7 +3,7 @@ print("RAG FILE LOADED")
 import os
 import time
 from dotenv import load_dotenv
-import google.generativeai as genai
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 def get_embedding_model():
     from langchain_google_genai import GoogleGenerativeAIEmbeddings
