@@ -4,12 +4,6 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
-def get_embedding_model():
-    return GoogleGenerativeAIEmbeddings(
-        model="models/embedding-001",
-        google_api_key=os.getenv("GOOGLE_API_KEY")
-    )
-
 # =========================
 # CONFIG
 # =========================
@@ -23,6 +17,12 @@ genai.configure(
 model = genai.GenerativeModel(
     "models/gemini-2.5-flash"
 )
+
+def get_embedding_model():
+    return GoogleGenerativeAIEmbeddings(
+        model="models/embedding-001",
+        google_api_key=os.getenv("GOOGLE_API_KEY")
+    )
 
 # =========================
 # SESSION STORAGE

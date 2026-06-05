@@ -1,12 +1,13 @@
 import uuid
 import tempfile
+import os
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader
 
 from .services.rag import (
     create_session,
@@ -23,13 +24,12 @@ def ask_document(request):
 
     uploaded_file = request.FILES.get("file")
 
-    # ==========================
+    # ==================================
     # NEW DOCUMENT UPLOAD
-    # ==========================
+    # ==================================
 
     if uploaded_file:
 
-        # Create temporary PDF
         with tempfile.NamedTemporaryFile(
             delete=False,
             suffix=".pdf"
@@ -42,9 +42,8 @@ def ask_document(request):
 
         try:
 
-            # Read PDF
+            # Load PDF
             loader = PyPDFLoader(temp_path)
-
             pages = loader.load()
 
             # Split into chunks
@@ -53,20 +52,19 @@ def ask_document(request):
                 chunk_overlap=200
             )
 
-            docs = splitter.split_documents(
-                pages
-            )
+            docs = splitter.split_documents(pages)
+
+            # Create embeddings using Google API
+            embeddings = get_embedding_model()
 
             # Build FAISS index
             vectorstore = FAISS.from_documents(
                 docs,
-                get_embedding_model
+                embeddings
             )
 
-            # Generate unique session
-            session_id = str(
-                uuid.uuid4()
-            )
+            # Create session
+            session_id = str(uuid.uuid4())
 
             create_session(
                 session_id,
@@ -78,17 +76,20 @@ def ask_document(request):
                 "message": "Document uploaded successfully"
             })
 
-        finally:
+        except Exception as e:
 
-            # Delete temporary PDF immediately
-            import os
+            return Response({
+                "error": str(e)
+            }, status=500)
+
+        finally:
 
             if os.path.exists(temp_path):
                 os.remove(temp_path)
 
-    # ==========================
+    # ==================================
     # ASK QUESTION
-    # ==========================
+    # ==================================
 
     if not session_id:
 
